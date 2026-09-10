@@ -2,8 +2,10 @@ import React from 'react';
 import logoImg from '../assets/logo.jpg';
 
 function Navbar({ activeTab, scrollToSection, isScrolled }) {
+  const isOnHero = activeTab === 'Home';
+
   return (
-    <header className={`site-header ${isScrolled ? 'scrolled' : ''}`}>
+    <header className={`site-header ${isScrolled ? 'scrolled' : ''} ${isOnHero ? 'header-on-hero' : 'header-on-light'}`}>
       <nav className="nav-wrapper">
         {/* Left Navigation Links */}
         <div className="nav-group">
