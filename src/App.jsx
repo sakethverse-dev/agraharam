@@ -38,7 +38,6 @@ function App() {
         { id: 'home', name: 'Home' },
         { id: 'about', name: 'About' },
         { id: 'menu', name: 'Menu' },
-        { id: 'order', name: 'Order' },
         { id: 'contact', name: 'Contact' }
       ];
 

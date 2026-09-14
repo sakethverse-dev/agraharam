@@ -103,7 +103,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                 className="empty-cart-cta"
                 onClick={() => {
                   onClose();
-                  const el = document.getElementById('order');
+                  const el = document.getElementById('menu') || document.getElementById('order');
                   if (el) el.scrollIntoView({ behavior: 'smooth' });
                 }}
               >

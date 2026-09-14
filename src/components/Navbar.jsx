@@ -23,13 +23,6 @@ function Navbar({ activeTab, scrollToSection, isScrolled, totalCartItems = 0, op
           >
             About
           </button>
-          <button
-            type="button"
-            className={`nav-link ${activeTab === 'Menu' ? 'active' : ''}`}
-            onClick={() => scrollToSection('menu', 'Menu')}
-          >
-            Menu
-          </button>
         </div>
 
         {/* Center AGRAHARAM Brand Logo */}
@@ -55,10 +48,10 @@ function Navbar({ activeTab, scrollToSection, isScrolled, totalCartItems = 0, op
         <div className="nav-group">
           <button
             type="button"
-            className={`nav-link ${activeTab === 'Order' ? 'active' : ''}`}
-            onClick={() => scrollToSection('order', 'Order')}
+            className={`nav-link ${activeTab === 'Menu' ? 'active' : ''}`}
+            onClick={() => scrollToSection('menu', 'Menu')}
           >
-            Order Online
+            Menu
           </button>
           <button
             type="button"
