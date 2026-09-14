@@ -273,7 +273,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                       maxLength={80}
                       value={customerData.name}
                       onChange={handleInputChange}
-                      placeholder="e.g. Sridhar Rao"
+                      placeholder="Enter your name"
                       className="cart-input"
                       required
                     />

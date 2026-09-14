@@ -3,7 +3,6 @@ import React, { useState } from 'react';
 function Contact({ phoneNumber = "+91 80089 44894" }) {
   const [formData, setFormData] = useState({
     name: '',
-    phone: '',
     subject: 'General Inquiry',
     message: '',
     website_hp: '' // Honeypot bot trap
@@ -39,18 +38,10 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
     }
 
     const cleanName = sanitizeInput(formData.name);
-    const cleanPhone = sanitizeInput(formData.phone);
     const cleanMessage = sanitizeInput(formData.message);
 
-    if (!cleanName || !cleanPhone || !cleanMessage) {
-      setFormError('Please enter your Name, Phone Number, and Message.');
-      return;
-    }
-
-    // Phone validation (at least 10 digits)
-    const digitCount = cleanPhone.replace(/[^0-9]/g, '').length;
-    if (digitCount < 10) {
-      setFormError('Please enter a valid 10-digit mobile phone number.');
+    if (!cleanName || !cleanMessage) {
+      setFormError('Please enter your Name and Message.');
       return;
     }
 
@@ -64,14 +55,12 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
     setShowConfirmModal(false);
 
     const cleanName = sanitizeInput(formData.name);
-    const cleanPhone = sanitizeInput(formData.phone);
     const cleanSubject = sanitizeInput(formData.subject);
     const cleanMessage = sanitizeInput(formData.message);
 
     const text =
       `🌿 *GENERAL INQUIRY - AGRAHARAM* 🌿\n\n` +
       `*Name:* ${cleanName || 'Not specified'}\n` +
-      `*Phone:* ${cleanPhone || 'Not specified'}\n` +
       `*Topic:* ${cleanSubject}\n` +
       `*Message:* ${cleanMessage || 'Hello, I have an inquiry regarding AGRAHARAM.'}\n\n` +
       `_Sent via AGRAHARAM Website_`;
@@ -139,35 +128,19 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
                 aria-hidden="true"
               />
 
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="inquiry-name" className="form-label">Your Name *</label>
-                  <input
-                    type="text"
-                    id="inquiry-name"
-                    name="name"
-                    maxLength={80}
-                    value={formData.name}
-                    onChange={handleChange}
-                    placeholder="e.g. Sridhar Rao"
-                    className="form-input"
-                    required
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="inquiry-phone" className="form-label">Phone Number *</label>
-                  <input
-                    type="tel"
-                    id="inquiry-phone"
-                    name="phone"
-                    maxLength={15}
-                    value={formData.phone}
-                    onChange={handleChange}
-                    placeholder="e.g. 98480 12345"
-                    className="form-input"
-                    required
-                  />
-                </div>
+              <div className="form-group">
+                <label htmlFor="inquiry-name" className="form-label">Your Name *</label>
+                <input
+                  type="text"
+                  id="inquiry-name"
+                  name="name"
+                  maxLength={80}
+                  value={formData.name}
+                  onChange={handleChange}
+                  placeholder="Enter your name"
+                  className="form-input"
+                  required
+                />
               </div>
 
               <div className="form-group">
@@ -225,7 +198,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
             <div className="confirm-modal-body">
               <div className="confirm-detail-row">
                 <span className="confirm-detail-label">👤 From:</span>
-                <strong className="confirm-detail-val">{formData.name} ({formData.phone})</strong>
+                <strong className="confirm-detail-val">{formData.name}</strong>
               </div>
               <div className="confirm-detail-row">
                 <span className="confirm-detail-label">📋 Topic:</span>
