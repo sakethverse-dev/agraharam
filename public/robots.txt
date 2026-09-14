@@ -1,0 +1,9 @@
+# https://www.robotstxt.org/robotstxt.html
+User-agent: *
+Allow: /
+
+# Disallow indexing of private or temporary assets
+Disallow: /api/
+Disallow: /*.json$
+
+Sitemap: https://agraharam.vercel.app/sitemap.xml

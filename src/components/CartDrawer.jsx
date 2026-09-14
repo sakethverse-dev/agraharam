@@ -7,13 +7,22 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
     phone: '',
     address: '',
     eventDate: '',
-    notes: ''
+    notes: '',
+    website_hp: '' // Honeypot bot trap
   });
+
+  const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const rawPhone = phoneNumber.replace(/[^0-9]/g, '');
 
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+
+  const sanitizeInput = (text) => {
+    if (!text) return '';
+    return text.replace(/[<>]/g, '').trim();
+  };
 
   const handleQtyUpdate = (cartItemId, delta) => {
     setCart((prevCart) =>
@@ -34,10 +43,12 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
   };
 
   const handleInputChange = (e) => {
-    setCustomerData({
-      ...customerData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setCustomerData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+    if (formError) setFormError('');
   };
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -45,15 +56,43 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
   const handleOpenConfirmation = (e) => {
     e.preventDefault();
     if (cart.length === 0) return;
-    if (!customerData.name.trim() || !customerData.phone.trim() || !customerData.address.trim()) {
-      alert('Please fill in your Name, Phone Number, and Delivery City/Area.');
+
+    // Honeypot check: If bot filled the hidden honeypot, ignore silently
+    if (customerData.website_hp) {
       return;
     }
+
+    const cleanName = sanitizeInput(customerData.name);
+    const cleanPhone = sanitizeInput(customerData.phone);
+    const cleanAddress = sanitizeInput(customerData.address);
+
+    if (!cleanName || !cleanPhone || !cleanAddress) {
+      setFormError('Please fill in your Name, Phone Number, and Delivery City/Area.');
+      return;
+    }
+
+    // Phone validation (digits only count should be at least 10)
+    const digitCount = cleanPhone.replace(/[^0-9]/g, '').length;
+    if (digitCount < 10) {
+      setFormError('Please enter a valid 10-digit mobile phone number.');
+      return;
+    }
+
+    setFormError('');
     setShowConfirmModal(true);
   };
 
   const confirmAndSendWhatsApp = () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     setShowConfirmModal(false);
+
+    const cleanName = sanitizeInput(customerData.name);
+    const cleanPhone = sanitizeInput(customerData.phone);
+    const cleanAddress = sanitizeInput(customerData.address);
+    const cleanDate = sanitizeInput(customerData.eventDate);
+    const cleanNotes = sanitizeInput(customerData.notes);
+
     const typeLabel = orderType === 'bulk' ? 'BULK / EVENT ORDER' : 'NORMAL / HOUSEHOLD ORDER';
     
     // Format item list
@@ -67,18 +106,24 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
     const message =
       `🌿 *NEW ORDER FROM WEBSITE - AGRAHARAM* 🌿\n\n` +
       `*Order Type:* ${typeLabel}\n` +
-      `*Customer Name:* ${customerData.name}\n` +
-      `*Phone Number:* ${customerData.phone}\n` +
-      `*Delivery Location / City:* ${customerData.address}\n` +
-      (orderType === 'bulk' && customerData.eventDate ? `*Required Date / Event:* ${customerData.eventDate}\n` : '') +
-      (customerData.notes ? `*Special Notes:* ${customerData.notes}\n` : '') +
+      `*Customer Name:* ${cleanName}\n` +
+      `*Phone Number:* ${cleanPhone}\n` +
+      `*Delivery Location / City:* ${cleanAddress}\n` +
+      (orderType === 'bulk' && cleanDate ? `*Required Date / Event:* ${cleanDate}\n` : '') +
+      (cleanNotes ? `*Special Notes:* ${cleanNotes}\n` : '') +
       `\n🛒 *ORDERED DELICACIES:*\n${itemsList}\n\n` +
       `💰 *SUBTOTAL AMOUNT:* ₹${subtotal}\n` +
       `🚚 *DELIVERY CHARGES:* Applicable based on location\n\n` +
       `_Sent via AGRAHARAM Online Store_`;
 
     const url = `https://wa.me/${rawPhone || '918008944894'}?text=${encodeURIComponent(message)}`;
-    window.open(url, '_blank');
+    
+    // Reverse tabnabbing protection with explicit noopener,noreferrer
+    window.open(url, '_blank', 'noopener,noreferrer');
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 1500);
   };
 
   if (!isOpen) return null;
@@ -193,12 +238,39 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                 <form id="cart-checkout-form" onSubmit={handleOpenConfirmation} className="cart-customer-form">
                   <div className="form-subheading">Delivery & Customer Details</div>
 
+                  {formError && (
+                    <div style={{
+                      background: '#FFF3F3',
+                      border: '1px solid #E57373',
+                      color: '#C62828',
+                      padding: '10px 14px',
+                      borderRadius: '8px',
+                      fontSize: '0.88rem',
+                      marginBottom: '16px'
+                    }}>
+                      ⚠️ {formError}
+                    </div>
+                  )}
+
+                  {/* Honeypot Spam Trap (Hidden from real users) */}
+                  <input
+                    type="text"
+                    name="website_hp"
+                    value={customerData.website_hp}
+                    onChange={handleInputChange}
+                    tabIndex="-1"
+                    autoComplete="off"
+                    style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', height: 0, width: 0 }}
+                    aria-hidden="true"
+                  />
+
                   <div className="cart-form-group">
                     <label htmlFor="cart-name" className="cart-label">Your Name *</label>
                     <input
                       type="text"
                       id="cart-name"
                       name="name"
+                      maxLength={80}
                       value={customerData.name}
                       onChange={handleInputChange}
                       placeholder="e.g. Sridhar Rao"
@@ -213,6 +285,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                       type="tel"
                       id="cart-phone"
                       name="phone"
+                      maxLength={15}
                       value={customerData.phone}
                       onChange={handleInputChange}
                       placeholder="e.g. 98480 12345"
@@ -227,6 +300,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                       type="text"
                       id="cart-address"
                       name="address"
+                      maxLength={250}
                       value={customerData.address}
                       onChange={handleInputChange}
                       placeholder="e.g. Jubilee Hills, Hyderabad"
@@ -255,6 +329,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                       type="text"
                       id="cart-notes"
                       name="notes"
+                      maxLength={400}
                       value={customerData.notes}
                       onChange={handleInputChange}
                       placeholder="e.g. Medium spicy, festive gift pack..."

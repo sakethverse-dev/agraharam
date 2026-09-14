@@ -5,41 +5,85 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
     name: '',
     phone: '',
     subject: 'General Inquiry',
-    message: ''
+    message: '',
+    website_hp: '' // Honeypot bot trap
   });
+
+  const [formError, setFormError] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const rawPhone = phoneNumber.replace(/[^0-9]/g, '');
 
+  const sanitizeInput = (text) => {
+    if (!text) return '';
+    return text.replace(/[<>]/g, '').trim();
+  };
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value
+    }));
+    if (formError) setFormError('');
   };
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const handleOpenConfirmation = (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.phone.trim() || !formData.message.trim()) {
-      alert('Please enter your name, phone number, and message.');
+
+    // Honeypot check: If bot filled the hidden honeypot, ignore silently
+    if (formData.website_hp) {
       return;
     }
+
+    const cleanName = sanitizeInput(formData.name);
+    const cleanPhone = sanitizeInput(formData.phone);
+    const cleanMessage = sanitizeInput(formData.message);
+
+    if (!cleanName || !cleanPhone || !cleanMessage) {
+      setFormError('Please enter your Name, Phone Number, and Message.');
+      return;
+    }
+
+    // Phone validation (at least 10 digits)
+    const digitCount = cleanPhone.replace(/[^0-9]/g, '').length;
+    if (digitCount < 10) {
+      setFormError('Please enter a valid 10-digit mobile phone number.');
+      return;
+    }
+
+    setFormError('');
     setShowConfirmModal(true);
   };
 
   const confirmAndSendInquiry = () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
     setShowConfirmModal(false);
+
+    const cleanName = sanitizeInput(formData.name);
+    const cleanPhone = sanitizeInput(formData.phone);
+    const cleanSubject = sanitizeInput(formData.subject);
+    const cleanMessage = sanitizeInput(formData.message);
+
     const text =
       `🌿 *GENERAL INQUIRY - AGRAHARAM* 🌿\n\n` +
-      `*Name:* ${formData.name || 'Not specified'}\n` +
-      `*Phone:* ${formData.phone || 'Not specified'}\n` +
-      `*Topic:* ${formData.subject}\n` +
-      `*Message:* ${formData.message || 'Hello, I have an inquiry regarding AGRAHARAM.'}\n\n` +
+      `*Name:* ${cleanName || 'Not specified'}\n` +
+      `*Phone:* ${cleanPhone || 'Not specified'}\n` +
+      `*Topic:* ${cleanSubject}\n` +
+      `*Message:* ${cleanMessage || 'Hello, I have an inquiry regarding AGRAHARAM.'}\n\n` +
       `_Sent via AGRAHARAM Website_`;
 
     const url = `https://wa.me/${rawPhone || '918008944894'}?text=${encodeURIComponent(text)}`;
-    window.open(url, '_blank');
+    
+    // Reverse tabnabbing protection with explicit noopener,noreferrer
+    window.open(url, '_blank', 'noopener,noreferrer');
+
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 1500);
   };
 
   return (
@@ -69,6 +113,32 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
             </div>
 
             <form onSubmit={handleOpenConfirmation} className="quick-order-form">
+              {formError && (
+                <div style={{
+                  background: '#FFF3F3',
+                  border: '1px solid #E57373',
+                  color: '#C62828',
+                  padding: '10px 14px',
+                  borderRadius: '8px',
+                  fontSize: '0.88rem',
+                  marginBottom: '16px'
+                }}>
+                  ⚠️ {formError}
+                </div>
+              )}
+
+              {/* Honeypot Spam Trap (Hidden from real users) */}
+              <input
+                type="text"
+                name="website_hp"
+                value={formData.website_hp}
+                onChange={handleChange}
+                tabIndex="-1"
+                autoComplete="off"
+                style={{ position: 'absolute', opacity: 0, pointerEvents: 'none', height: 0, width: 0 }}
+                aria-hidden="true"
+              />
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="inquiry-name" className="form-label">Your Name *</label>
@@ -76,6 +146,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
                     type="text"
                     id="inquiry-name"
                     name="name"
+                    maxLength={80}
                     value={formData.name}
                     onChange={handleChange}
                     placeholder="e.g. Sridhar Rao"
@@ -89,6 +160,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
                     type="tel"
                     id="inquiry-phone"
                     name="phone"
+                    maxLength={15}
                     value={formData.phone}
                     onChange={handleChange}
                     placeholder="e.g. 98480 12345"
@@ -119,6 +191,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
                 <textarea
                   id="inquiry-message"
                   name="message"
+                  maxLength={600}
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="How can we help you today? Ask any questions or share your requirements..."
@@ -128,8 +201,8 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
                 ></textarea>
               </div>
 
-              <button type="submit" className="form-submit-btn">
-                <span>Send Message via WhatsApp</span>
+              <button type="submit" className="form-submit-btn" disabled={isSubmitting}>
+                <span>{isSubmitting ? 'Opening WhatsApp...' : 'Send Message via WhatsApp'}</span>
                 <span className="submit-btn-icon">💬</span>
               </button>
             </form>
