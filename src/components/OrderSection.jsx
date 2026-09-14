@@ -3,6 +3,7 @@ import { PRODUCTS_SHOWCASE, ORDER_CATEGORIES } from '../data/products';
 
 function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOpen, setIsCartOpen }) {
   const [activeCategory, setActiveCategory] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
   
   // Local state for product card selections: { [productId]: { selectedSizeIndex, quantity } }
   const [productSelections, setProductSelections] = useState(() => {
@@ -17,9 +18,22 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
 
   const rawPhone = phoneNumber.replace(/[^0-9]/g, '');
 
-  const filteredProducts = activeCategory === 'all'
-    ? PRODUCTS_SHOWCASE
-    : PRODUCTS_SHOWCASE.filter((p) => p.category === activeCategory);
+  const filteredProducts = PRODUCTS_SHOWCASE.filter((p) => {
+    const matchesCategory = activeCategory === 'all' || p.category === activeCategory;
+    if (!searchQuery.trim()) return matchesCategory;
+    
+    const q = searchQuery.toLowerCase().trim();
+    const matchesSearch =
+      p.name.toLowerCase().includes(q) ||
+      (p.telugu && p.telugu.toLowerCase().includes(q)) ||
+      (p.highlight && p.highlight.toLowerCase().includes(q)) ||
+      (p.desc && p.desc.toLowerCase().includes(q)) ||
+      (p.category && p.category.toLowerCase().includes(q)) ||
+      (p.leftCallout && p.leftCallout.toLowerCase().includes(q)) ||
+      (p.rightCallout && p.rightCallout.toLowerCase().includes(q));
+
+    return matchesCategory && matchesSearch;
+  });
 
   const handleSizeChange = (productId, sizeIndex) => {
     setProductSelections((prev) => ({
@@ -98,6 +112,53 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
           </p>
         </div>
 
+        {/* Search Bar */}
+        <div className="order-search-wrapper">
+          <div className="order-search-box">
+            <span className="search-icon" aria-hidden="true">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+              </svg>
+            </span>
+            <input
+              type="text"
+              className="order-search-input"
+              placeholder="Search delicacies (e.g. Ragi Papad, Moringa Powder, Mango Pickle, మునగాకు...)"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              aria-label="Search delicacies and products"
+            />
+            {searchQuery && (
+              <button
+                type="button"
+                className="search-clear-btn"
+                onClick={() => setSearchQuery('')}
+                aria-label="Clear search"
+              >
+                ✕
+              </button>
+            )}
+          </div>
+          {searchQuery.trim() && (
+            <div className="search-status-bar">
+              <span>
+                Found <strong>{filteredProducts.length}</strong> {filteredProducts.length === 1 ? 'delicacy' : 'delicacies'} matching "<em>{searchQuery}</em>"
+              </span>
+              <button
+                type="button"
+                className="search-reset-link"
+                onClick={() => {
+                  setSearchQuery('');
+                  setActiveCategory('all');
+                }}
+              >
+                Clear Search & Filters
+              </button>
+            </div>
+          )}
+        </div>
+
         {/* Category Filters */}
         <div className="order-categories-strip">
           {ORDER_CATEGORIES.map((cat) => (
@@ -112,8 +173,27 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
           ))}
         </div>
 
-        {/* Products Grid */}
-        <div className="order-products-grid">
+        {/* Products Grid or Empty State */}
+        {filteredProducts.length === 0 ? (
+          <div className="order-empty-search-state">
+            <div className="empty-search-icon">🔍</div>
+            <h3 className="empty-search-title">No Delicacies Found</h3>
+            <p className="empty-search-text">
+              We couldn't find any items matching "<strong>{searchQuery}</strong>"{activeCategory !== 'all' ? ` in this category` : ''}.
+            </p>
+            <button
+              type="button"
+              className="empty-search-reset-btn"
+              onClick={() => {
+                setSearchQuery('');
+                setActiveCategory('all');
+              }}
+            >
+              View All 21 Delicacies
+            </button>
+          </div>
+        ) : (
+          <div className="order-products-grid">
           {filteredProducts.map((product) => {
             const selection = productSelections[product.id] || { sizeIndex: 0, qty: 1 };
             const currentVariant = product.variants[selection.sizeIndex];
@@ -207,6 +287,7 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
             );
           })}
         </div>
+        )}
 
         {/* Bottom Banner to Contact / Bulk Inquiries */}
         <div className="order-bottom-assistance-card">
