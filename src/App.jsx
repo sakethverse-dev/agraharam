@@ -109,25 +109,6 @@ function App() {
       {/* Site Footer Component */}
       <Footer scrollToSection={scrollToSection} phoneNumber={phoneNumber} />
 
-      {/* Floating Cart Button */}
-      {totalCartItems > 0 && (
-        <button
-          type="button"
-          className="floating-cart-btn"
-          onClick={() => setIsCartOpen(true)}
-          aria-label="Open Shopping Cart"
-        >
-          <div className="floating-cart-icon-wrap">
-            <span className="floating-cart-emoji">🛍️</span>
-            <span className="floating-cart-badge">{totalCartItems}</span>
-          </div>
-          <div className="floating-cart-text">
-            <span className="floating-cart-label">Cart</span>
-            <span className="floating-cart-price">₹{cartSubtotal}</span>
-          </div>
-        </button>
-      )}
-
       {/* Slide-out Cart Drawer Modal */}
       <CartDrawer
         isOpen={isCartOpen}

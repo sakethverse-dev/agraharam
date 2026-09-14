@@ -63,9 +63,6 @@ function Footer({ scrollToSection, phoneNumber = "+91 80089 44894" }) {
 
         {/* Bottom Bar */}
         <div className="footer-bottom-bar">
-          <div className="footer-copyright">
-            © {new Date().getFullYear()} AGRAHARAM. All Rights Reserved. Handcrafted with Love.
-          </div>
           <div className="footer-founder-credit">
             Founded by <strong>SIRAAJ MOHAMMED</strong>
           </div>
