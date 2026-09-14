@@ -80,8 +80,6 @@ function App() {
         activeTab={activeTab}
         scrollToSection={scrollToSection}
         isScrolled={isScrolled}
-        totalCartItems={totalCartItems}
-        openCart={() => setIsCartOpen(true)}
       />
 
       {/* Hero / Home Section Component */}
@@ -107,6 +105,23 @@ function App() {
 
       {/* Site Footer Component */}
       <Footer scrollToSection={scrollToSection} phoneNumber={phoneNumber} />
+
+      {/* Floating Bottom Cart Pill when items are in cart */}
+      {totalCartItems > 0 && !isCartOpen && (
+        <button
+          type="button"
+          className="floating-cart-pill"
+          onClick={() => setIsCartOpen(true)}
+          aria-label="View Cart"
+        >
+          <div className="floating-cart-left">
+            <span className="floating-cart-badge">{totalCartItems}</span>
+            <span className="floating-cart-icon">🛒</span>
+            <span className="floating-cart-text">View Cart</span>
+          </div>
+          <span className="floating-cart-total">₹{cartSubtotal} →</span>
+        </button>
+      )}
 
       {/* Slide-out Cart Drawer Modal */}
       <CartDrawer

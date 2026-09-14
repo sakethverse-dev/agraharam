@@ -1,7 +1,7 @@
 import React from 'react';
 import logoImg from '../assets/logo.jpg';
 
-function Navbar({ activeTab, scrollToSection, isScrolled, totalCartItems = 0, openCart }) {
+function Navbar({ activeTab, scrollToSection, isScrolled }) {
   const isOnHero = activeTab === 'Home';
 
   return (
@@ -44,7 +44,7 @@ function Navbar({ activeTab, scrollToSection, isScrolled, totalCartItems = 0, op
           </div>
         </a>
 
-        {/* Right Navigation Links & Cart Button */}
+        {/* Right Navigation Links */}
         <div className="nav-group">
           <button
             type="button"
@@ -60,19 +60,6 @@ function Navbar({ activeTab, scrollToSection, isScrolled, totalCartItems = 0, op
           >
             Contact
           </button>
-          {openCart && (
-            <button
-              type="button"
-              className="nav-cart-btn"
-              onClick={openCart}
-              aria-label="Open Cart"
-            >
-              <span className="nav-cart-icon">🛒</span>
-              {totalCartItems > 0 && (
-                <span className="nav-cart-badge">{totalCartItems}</span>
-              )}
-            </button>
-          )}
         </div>
       </nav>
     </header>
