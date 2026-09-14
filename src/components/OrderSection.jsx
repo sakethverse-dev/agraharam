@@ -121,10 +121,9 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
 
             return (
               <div key={product.id} className="order-product-card">
-                {/* Product Thumbnail with Badges */}
+                {/* Product Thumbnail */}
                 <div className="product-card-media">
                   <img src={product.img} alt={product.name} className="product-card-img" />
-                  <div className="product-card-badge">{product.highlight.split('•')[0].trim()}</div>
                 </div>
 
                 {/* Content */}

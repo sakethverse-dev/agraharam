@@ -63,8 +63,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
       (orderType === 'bulk' && customerData.eventDate ? `*Required Date / Event:* ${customerData.eventDate}\n` : '') +
       (customerData.notes ? `*Special Notes:* ${customerData.notes}\n` : '') +
       `\n🛒 *ORDERED DELICACIES:*\n${itemsList}\n\n` +
-      `💰 *TOTAL ESTIMATED AMOUNT:* ₹${subtotal}\n` +
-      `✨ *Quality Promise:* Pure Desi Cow Ghee & Wood-Pressed Oils\n\n` +
+      `💰 *TOTAL ESTIMATED AMOUNT:* ₹${subtotal}\n\n` +
       `_Sent via AGRAHARAM Online Store_`;
 
     const url = `https://wa.me/${rawPhone || '918008944894'}?text=${encodeURIComponent(message)}`;
@@ -261,10 +260,6 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
             <div className="cart-summary-row">
               <span className="summary-label">Delicacies Subtotal:</span>
               <span className="summary-value">₹{subtotal}</span>
-            </div>
-            <div className="cart-summary-row highlight">
-              <span className="summary-label">Fresh Batch Preparation:</span>
-              <span className="summary-badge">Pure Ghee & Wood-Pressed</span>
             </div>
             <div className="cart-total-row">
               <span className="total-label">Total Payable:</span>
