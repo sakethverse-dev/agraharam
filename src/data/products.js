@@ -14,8 +14,12 @@ import tamarindPickleImg from '../assets/products/tamarind_pickle.jpg';
 import lemonPickleImg from '../assets/products/lemon_pickle.jpg';
 
 import ragiPindiImg from '../assets/products/ragi_pindi.jpg';
-import milletFlourImg from '../assets/products/millet_flour.jpg';
+import pajjunnulaGadkaPindiImg from '../assets/products/pajjunnula_gadka_pindi.jpg';
+import multiMilletPowderImg from '../assets/products/multi_millet_powder.jpg';
+import kankulaGadkaPowderImg from '../assets/products/kankula_gadka_powder.jpg';
 import karivepakuPodiImg from '../assets/products/karivepaku_podi.jpg';
+import moringaPowderImg from '../assets/products/moringa_powder.jpg';
+import nuvvuluImg from '../assets/products/nuvvulu.jpg';
 
 export const TAGLINES = [
   "సాంప్రదాయం • రుచి • అనుబంధం",
@@ -264,7 +268,7 @@ export const PRODUCTS_SHOWCASE = [
     name: 'Pajjunnula Gadka Pindi',
     telugu: 'పచ్చజొన్నల గట్క పిండి (Fresh Yellow Jowar Flour)',
     category: 'pindilu',
-    img: milletFlourImg,
+    img: pajjunnulaGadkaPindiImg,
     leftCallout: 'Traditional Yellow Jowar Flour',
     rightCallout: 'Perfect for Healthy Jowar Rotis',
     desc: 'Freshly milled yellow sorghum (Pacha Jonna) flour with natural dietary fiber and minerals, stone-milled for soft rotis and nutritious porridge.',
@@ -280,7 +284,7 @@ export const PRODUCTS_SHOWCASE = [
     name: 'Multi Millet Powder',
     telugu: 'మల్టీ మిల్లెట్ పిండి (Navadhanya Flour)',
     category: 'pindilu',
-    img: milletFlourImg,
+    img: multiMilletPowderImg,
     leftCallout: 'Power of 9 Sacred Millets',
     rightCallout: 'Wholesome Everyday Health',
     desc: 'A powerhouse blend of selected traditional millets (Ragi, Jowar, Bajra, Foxtail, Kodo & Little Millet) stone-milled together for complete daily nutrition.',
@@ -296,7 +300,7 @@ export const PRODUCTS_SHOWCASE = [
     name: 'Kankula Gadka Powder',
     telugu: 'కంకుల గట్క పొడి (Coarse Millet Grain Powder)',
     category: 'pindilu',
-    img: milletFlourImg,
+    img: kankulaGadkaPowderImg,
     leftCallout: 'Rustic Coarse Millet Blend',
     rightCallout: 'For Traditional Gadka & Porridge',
     desc: 'Coarsely crushed farm millet grain powder specifically crafted for slow-cooked traditional Telangana/Andhra Gadka and morning energy drinks.',
@@ -329,7 +333,7 @@ export const PRODUCTS_SHOWCASE = [
     name: 'Moringa Powder',
     telugu: 'మునగాకు పొడి (Pure Moringa Leaves Powder)',
     category: 'pindilu',
-    img: karivepakuPodiImg,
+    img: moringaPowderImg,
     leftCallout: 'Immunity & Superfood Booster',
     rightCallout: '100% Shade-Dried Moringa',
     desc: 'Pure, shade-dried organic Moringa (Munagaku) leaves finely ground into a nutrient-rich superfood powder. Packed with natural antioxidants, iron, and multivitamins.',
@@ -365,7 +369,7 @@ export const PRODUCTS_SHOWCASE = [
     name: 'Nuvvulu (Desi Sesame Seeds)',
     telugu: 'నాటు నువ్వులు (Natural Sesame Seeds)',
     category: 'provisions',
-    img: nuvvulaVadiyaluImg,
+    img: nuvvuluImg,
     leftCallout: 'Unpolished & Aromatic',
     rightCallout: 'Rich in Healthy Calcium & Oils',
     desc: '100% natural, unpolished desi sesame seeds. High in natural oil content and calcium, ideal for traditional sweets, spice powders, and seasoning.',
