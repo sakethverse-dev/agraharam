@@ -130,7 +130,6 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
                 <div className="product-card-body">
                   <span className="product-telugu-badge">{product.telugu}</span>
                   <h3 className="product-card-name">{product.name}</h3>
-                  <p className="product-card-desc">{product.desc}</p>
 
                   {/* Pack Size Selector */}
                   <div className="pack-size-selector-wrap">
