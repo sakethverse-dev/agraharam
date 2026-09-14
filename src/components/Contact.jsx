@@ -42,56 +42,13 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
           <span className="contact-subtitle">GET IN TOUCH</span>
           <h2 className="contact-title">Contact & Inquiries</h2>
           <p className="contact-description">
-            Have questions about our traditional recipes, custom batch preparation, or need general assistance? Reach out to us directly through phone, WhatsApp, or the inquiry form below.
+            Have questions about our traditional recipes, custom batch preparation, or need general assistance? Send us a message below and we will connect with you promptly.
           </p>
         </div>
 
         {/* Contact Layout */}
         <div className="contact-interaction-wrapper">
-          {/* Left Column: Direct Contact Information */}
-          <div className="contact-info-panel">
-            <div className="contact-direct-card">
-              <div className="direct-card-icon">📞</div>
-              <div className="direct-card-body">
-                <span className="direct-card-label">DIRECT PHONE LINE</span>
-                <a href={`tel:${rawPhone || '918008944894'}`} className="direct-card-value">
-                  {phoneNumber}
-                </a>
-                <span className="direct-card-sub">Available Mon – Sun, 9:00 AM – 9:00 PM</span>
-              </div>
-            </div>
-
-            <div className="contact-direct-card">
-              <div className="direct-card-icon">💬</div>
-              <div className="direct-card-body">
-                <span className="direct-card-label">INSTANT WHATSAPP ASSISTANCE</span>
-                <a
-                  href={`https://wa.me/${rawPhone || '918008944894'}?text=${encodeURIComponent(
-                    'Hello AGRAHARAM, I have an inquiry.'
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="direct-whatsapp-btn"
-                >
-                  Contact on WhatsApp 💬
-                </a>
-                <span className="direct-card-sub">Chat directly with founder Siraaj Mohammed</span>
-              </div>
-            </div>
-
-            <div className="contact-direct-card">
-              <div className="direct-card-icon">📍</div>
-              <div className="direct-card-body">
-                <span className="direct-card-label">KITCHEN LOCATION</span>
-                <p className="direct-card-text">
-                  Hyderabad, Telangana, India
-                </p>
-                <span className="direct-card-sub">Artisanal homemade batches prepared fresh upon request</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: General Inquiry Form */}
+          {/* General Inquiry Form */}
           <div className="contact-form-panel">
             <div className="form-header">
               <h4 className="form-title">Send Us a Message</h4>

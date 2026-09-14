@@ -1235,12 +1235,11 @@ body {
   color: var(--gold-accent);
 }
 
-/* Contact Interaction Wrapper (Direct Call + Form) */
+/* Contact Interaction Wrapper (Centered Inquiry Form) */
 .contact-interaction-wrapper {
-  display: grid;
-  grid-template-columns: 1fr 1.35fr;
-  gap: 36px;
-  align-items: start;
+  max-width: 720px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .contact-info-panel {
