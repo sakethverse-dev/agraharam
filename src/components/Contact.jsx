@@ -17,8 +17,19 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
     });
   };
 
-  const handleSendMessage = (e) => {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const handleOpenConfirmation = (e) => {
     e.preventDefault();
+    if (!formData.name.trim() || !formData.phone.trim() || !formData.message.trim()) {
+      alert('Please enter your name, phone number, and message.');
+      return;
+    }
+    setShowConfirmModal(true);
+  };
+
+  const confirmAndSendInquiry = () => {
+    setShowConfirmModal(false);
     const text =
       `🌿 *GENERAL INQUIRY - AGRAHARAM* 🌿\n\n` +
       `*Name:* ${formData.name || 'Not specified'}\n` +
@@ -57,10 +68,10 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
               </p>
             </div>
 
-            <form onSubmit={handleSendMessage} className="quick-order-form">
+            <form onSubmit={handleOpenConfirmation} className="quick-order-form">
               <div className="form-row">
                 <div className="form-group">
-                  <label htmlFor="inquiry-name" className="form-label">Your Name</label>
+                  <label htmlFor="inquiry-name" className="form-label">Your Name *</label>
                   <input
                     type="text"
                     id="inquiry-name"
@@ -73,7 +84,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
                   />
                 </div>
                 <div className="form-group">
-                  <label htmlFor="inquiry-phone" className="form-label">Phone Number</label>
+                  <label htmlFor="inquiry-phone" className="form-label">Phone Number *</label>
                   <input
                     type="tel"
                     id="inquiry-phone"
@@ -104,7 +115,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
               </div>
 
               <div className="form-group">
-                <label htmlFor="inquiry-message" className="form-label">Your Message</label>
+                <label htmlFor="inquiry-message" className="form-label">Your Message *</label>
                 <textarea
                   id="inquiry-message"
                   name="message"
@@ -125,6 +136,54 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
           </div>
         </div>
       </div>
+
+      {/* WhatsApp Inquiry Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="modal-backdrop" onClick={() => setShowConfirmModal(false)}>
+          <div className="confirmation-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="confirm-modal-header">
+              <div className="confirm-ornament">❖</div>
+              <h3 className="confirm-modal-title">Confirm WhatsApp Inquiry</h3>
+              <p className="confirm-modal-subtitle">
+                Review your inquiry details before connecting to WhatsApp.
+              </p>
+            </div>
+
+            <div className="confirm-modal-body">
+              <div className="confirm-detail-row">
+                <span className="confirm-detail-label">👤 From:</span>
+                <strong className="confirm-detail-val">{formData.name} ({formData.phone})</strong>
+              </div>
+              <div className="confirm-detail-row">
+                <span className="confirm-detail-label">📋 Topic:</span>
+                <strong className="confirm-detail-val">{formData.subject}</strong>
+              </div>
+              <div className="confirm-detail-row">
+                <span className="confirm-detail-label">💬 Message:</span>
+                <p className="confirm-detail-text">"{formData.message}"</p>
+              </div>
+            </div>
+
+            <div className="confirm-modal-actions">
+              <button
+                type="button"
+                className="confirm-cancel-btn"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                Edit Message
+              </button>
+              <button
+                type="button"
+                className="confirm-proceed-btn"
+                onClick={confirmAndSendInquiry}
+              >
+                <span>Confirm & Send on WhatsApp</span>
+                <span className="confirm-btn-icon">💬</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 }

@@ -40,10 +40,20 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
     });
   };
 
-  const handleCheckoutWhatsApp = (e) => {
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+
+  const handleOpenConfirmation = (e) => {
     e.preventDefault();
     if (cart.length === 0) return;
+    if (!customerData.name.trim() || !customerData.phone.trim() || !customerData.address.trim()) {
+      alert('Please fill in your Name, Phone Number, and Delivery City/Area.');
+      return;
+    }
+    setShowConfirmModal(true);
+  };
 
+  const confirmAndSendWhatsApp = () => {
+    setShowConfirmModal(false);
     const typeLabel = orderType === 'bulk' ? 'BULK / EVENT ORDER' : 'NORMAL / HOUSEHOLD ORDER';
     
     // Format item list
@@ -57,13 +67,14 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
     const message =
       `🌿 *NEW ORDER FROM WEBSITE - AGRAHARAM* 🌿\n\n` +
       `*Order Type:* ${typeLabel}\n` +
-      `*Customer Name:* ${customerData.name || 'Not provided'}\n` +
-      `*Phone Number:* ${customerData.phone || 'Not provided'}\n` +
-      `*Delivery Location / City:* ${customerData.address || 'Not provided'}\n` +
+      `*Customer Name:* ${customerData.name}\n` +
+      `*Phone Number:* ${customerData.phone}\n` +
+      `*Delivery Location / City:* ${customerData.address}\n` +
       (orderType === 'bulk' && customerData.eventDate ? `*Required Date / Event:* ${customerData.eventDate}\n` : '') +
       (customerData.notes ? `*Special Notes:* ${customerData.notes}\n` : '') +
       `\n🛒 *ORDERED DELICACIES:*\n${itemsList}\n\n` +
-      `💰 *TOTAL ESTIMATED AMOUNT:* ₹${subtotal}\n\n` +
+      `💰 *SUBTOTAL AMOUNT:* ₹${subtotal}\n` +
+      `🚚 *DELIVERY CHARGES:* Applicable based on location\n\n` +
       `_Sent via AGRAHARAM Online Store_`;
 
     const url = `https://wa.me/${rawPhone || '918008944894'}?text=${encodeURIComponent(message)}`;
@@ -73,218 +84,288 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
   if (!isOpen) return null;
 
   return (
-    <div className="cart-overlay" onClick={onClose}>
-      <div className="cart-drawer-panel" onClick={(e) => e.stopPropagation()}>
-        {/* Drawer Header */}
-        <div className="cart-drawer-header">
-          <div className="cart-header-left">
-            <span className="cart-header-icon">🛍️</span>
-            <div>
-              <h3 className="cart-header-title">Your Order Cart</h3>
-              <span className="cart-header-count">{totalItems} {totalItems === 1 ? 'item' : 'items'} selected</span>
+    <>
+      <div className="cart-overlay" onClick={onClose}>
+        <div className="cart-drawer-panel" onClick={(e) => e.stopPropagation()}>
+          {/* Drawer Header */}
+          <div className="cart-drawer-header">
+            <div className="cart-header-left">
+              <span className="cart-header-icon">🛍️</span>
+              <div>
+                <h3 className="cart-header-title">Your Order Cart</h3>
+                <span className="cart-header-count">{totalItems} {totalItems === 1 ? 'item' : 'items'} selected</span>
+              </div>
             </div>
+            <button type="button" className="cart-close-btn" onClick={onClose} aria-label="Close cart">
+              ✕
+            </button>
           </div>
-          <button type="button" className="cart-close-btn" onClick={onClose} aria-label="Close cart">
-            ✕
-          </button>
-        </div>
 
-        {/* Drawer Body */}
-        <div className="cart-drawer-body">
-          {cart.length === 0 ? (
-            <div className="cart-empty-state">
-              <div className="empty-cart-icon">🛒</div>
-              <h4 className="empty-cart-title">Your cart is currently empty</h4>
-              <p className="empty-cart-desc">
-                Explore our authentic traditional homemade snacks, sweets, and pickles to start your order.
-              </p>
-              <button
-                type="button"
-                className="empty-cart-cta"
-                onClick={() => {
-                  onClose();
-                  const el = document.getElementById('menu') || document.getElementById('order');
-                  if (el) el.scrollIntoView({ behavior: 'smooth' });
-                }}
-              >
-                Browse Menu & Delicacies
-              </button>
-            </div>
-          ) : (
-            <>
-              {/* Itemized Cart List */}
-              <div className="cart-items-list">
-                {cart.map((item) => (
-                  <div key={item.cartItemId} className="cart-item-row">
-                    <img src={item.img} alt={item.name} className="cart-item-thumb" />
-                    <div className="cart-item-info">
-                      <h4 className="cart-item-name">{item.name}</h4>
-                      <div className="cart-item-meta">
-                        <span className="cart-item-size">{item.size}</span>
-                        <span className="cart-item-rate">@ ₹{item.price} each</span>
-                      </div>
-                      <div className="cart-item-controls">
-                        <div className="cart-qty-stepper">
-                          <button
-                            type="button"
-                            className="cart-qty-btn"
-                            onClick={() => handleQtyUpdate(item.cartItemId, -1)}
-                            aria-label="Decrease quantity"
-                          >
-                            −
-                          </button>
-                          <span className="cart-qty-num">{item.quantity}</span>
-                          <button
-                            type="button"
-                            className="cart-qty-btn"
-                            onClick={() => handleQtyUpdate(item.cartItemId, 1)}
-                            aria-label="Increase quantity"
-                          >
-                            +
-                          </button>
+          {/* Drawer Body */}
+          <div className="cart-drawer-body">
+            {cart.length === 0 ? (
+              <div className="cart-empty-state">
+                <div className="empty-cart-icon">🛒</div>
+                <h4 className="empty-cart-title">Your cart is currently empty</h4>
+                <p className="empty-cart-desc">
+                  Explore our authentic traditional homemade snacks, sweets, and pickles to start your order.
+                </p>
+                <button
+                  type="button"
+                  className="empty-cart-cta"
+                  onClick={() => {
+                    onClose();
+                    const el = document.getElementById('menu') || document.getElementById('order');
+                    if (el) el.scrollIntoView({ behavior: 'smooth' });
+                  }}
+                >
+                  Browse Menu & Delicacies
+                </button>
+              </div>
+            ) : (
+              <>
+                {/* Itemized Cart List */}
+                <div className="cart-items-list">
+                  {cart.map((item) => (
+                    <div key={item.cartItemId} className="cart-item-row">
+                      <img src={item.img} alt={item.name} className="cart-item-thumb" />
+                      <div className="cart-item-info">
+                        <h4 className="cart-item-name">{item.name}</h4>
+                        <div className="cart-item-meta">
+                          <span className="cart-item-size">{item.size}</span>
+                          <span className="cart-item-rate">@ ₹{item.price} each</span>
                         </div>
-                        <span className="cart-item-total">₹{item.price * item.quantity}</span>
+                        <div className="cart-item-controls">
+                          <div className="cart-qty-stepper">
+                            <button
+                              type="button"
+                              className="cart-qty-btn"
+                              onClick={() => handleQtyUpdate(item.cartItemId, -1)}
+                              aria-label="Decrease quantity"
+                            >
+                              −
+                            </button>
+                            <span className="cart-qty-num">{item.quantity}</span>
+                            <button
+                              type="button"
+                              className="cart-qty-btn"
+                              onClick={() => handleQtyUpdate(item.cartItemId, 1)}
+                              aria-label="Increase quantity"
+                            >
+                              +
+                            </button>
+                          </div>
+                          <span className="cart-item-total">₹{item.price * item.quantity}</span>
+                        </div>
                       </div>
+                      <button
+                        type="button"
+                        className="cart-item-delete"
+                        onClick={() => handleRemoveItem(item.cartItemId)}
+                        title="Remove item"
+                        aria-label="Remove item"
+                      >
+                        🗑
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      className="cart-item-delete"
-                      onClick={() => handleRemoveItem(item.cartItemId)}
-                      title="Remove item"
-                      aria-label="Remove item"
-                    >
-                      🗑
-                    </button>
-                  </div>
-                ))}
-              </div>
-
-              {/* Order Mode Toggle */}
-              <div className="cart-order-type-selector">
-                <button
-                  type="button"
-                  className={`order-type-tab ${orderType === 'normal' ? 'active' : ''}`}
-                  onClick={() => setOrderType('normal')}
-                >
-                  <span>🏠 Normal Order</span>
-                </button>
-                <button
-                  type="button"
-                  className={`order-type-tab ${orderType === 'bulk' ? 'active' : ''}`}
-                  onClick={() => setOrderType('bulk')}
-                >
-                  <span>🎉 Bulk / Event Order</span>
-                </button>
-              </div>
-
-              {/* Customer Details Form */}
-              <form id="cart-checkout-form" onSubmit={handleCheckoutWhatsApp} className="cart-customer-form">
-                <div className="form-subheading">Delivery & Customer Details</div>
-
-                <div className="cart-form-group">
-                  <label htmlFor="cart-name" className="cart-label">Your Name</label>
-                  <input
-                    type="text"
-                    id="cart-name"
-                    name="name"
-                    value={customerData.name}
-                    onChange={handleInputChange}
-                    placeholder="e.g. Sridhar Rao"
-                    className="cart-input"
-                    required
-                  />
+                  ))}
                 </div>
 
-                <div className="cart-form-group">
-                  <label htmlFor="cart-phone" className="cart-label">Phone Number</label>
-                  <input
-                    type="tel"
-                    id="cart-phone"
-                    name="phone"
-                    value={customerData.phone}
-                    onChange={handleInputChange}
-                    placeholder="e.g. 98480 12345"
-                    className="cart-input"
-                    required
-                  />
+                {/* Order Mode Toggle */}
+                <div className="cart-order-type-selector">
+                  <button
+                    type="button"
+                    className={`order-type-tab ${orderType === 'normal' ? 'active' : ''}`}
+                    onClick={() => setOrderType('normal')}
+                  >
+                    <span>🏠 Normal Order</span>
+                  </button>
+                  <button
+                    type="button"
+                    className={`order-type-tab ${orderType === 'bulk' ? 'active' : ''}`}
+                    onClick={() => setOrderType('bulk')}
+                  >
+                    <span>🎉 Bulk / Event Order</span>
+                  </button>
                 </div>
 
-                <div className="cart-form-group">
-                  <label htmlFor="cart-address" className="cart-label">Delivery City / Area</label>
-                  <input
-                    type="text"
-                    id="cart-address"
-                    name="address"
-                    value={customerData.address}
-                    onChange={handleInputChange}
-                    placeholder="e.g. Jubilee Hills, Hyderabad"
-                    className="cart-input"
-                    required
-                  />
-                </div>
+                {/* Customer Details Form */}
+                <form id="cart-checkout-form" onSubmit={handleOpenConfirmation} className="cart-customer-form">
+                  <div className="form-subheading">Delivery & Customer Details</div>
 
-                {orderType === 'bulk' && (
                   <div className="cart-form-group">
-                    <label htmlFor="cart-eventDate" className="cart-label">Event / Required Date</label>
+                    <label htmlFor="cart-name" className="cart-label">Your Name *</label>
                     <input
-                      type="date"
-                      id="cart-eventDate"
-                      name="eventDate"
-                      value={customerData.eventDate}
+                      type="text"
+                      id="cart-name"
+                      name="name"
+                      value={customerData.name}
                       onChange={handleInputChange}
+                      placeholder="e.g. Sridhar Rao"
+                      className="cart-input"
+                      required
+                    />
+                  </div>
+
+                  <div className="cart-form-group">
+                    <label htmlFor="cart-phone" className="cart-label">Phone Number *</label>
+                    <input
+                      type="tel"
+                      id="cart-phone"
+                      name="phone"
+                      value={customerData.phone}
+                      onChange={handleInputChange}
+                      placeholder="e.g. 98480 12345"
+                      className="cart-input"
+                      required
+                    />
+                  </div>
+
+                  <div className="cart-form-group">
+                    <label htmlFor="cart-address" className="cart-label">Delivery City / Area *</label>
+                    <input
+                      type="text"
+                      id="cart-address"
+                      name="address"
+                      value={customerData.address}
+                      onChange={handleInputChange}
+                      placeholder="e.g. Jubilee Hills, Hyderabad"
+                      className="cart-input"
+                      required
+                    />
+                  </div>
+
+                  {orderType === 'bulk' && (
+                    <div className="cart-form-group">
+                      <label htmlFor="cart-eventDate" className="cart-label">Event / Required Date</label>
+                      <input
+                        type="date"
+                        id="cart-eventDate"
+                        name="eventDate"
+                        value={customerData.eventDate}
+                        onChange={handleInputChange}
+                        className="cart-input"
+                      />
+                    </div>
+                  )}
+
+                  <div className="cart-form-group">
+                    <label htmlFor="cart-notes" className="cart-label">Special Notes / Spice Level (Optional)</label>
+                    <input
+                      type="text"
+                      id="cart-notes"
+                      name="notes"
+                      value={customerData.notes}
+                      onChange={handleInputChange}
+                      placeholder="e.g. Medium spicy, festive gift pack..."
                       className="cart-input"
                     />
                   </div>
-                )}
+                </form>
+              </>
+            )}
+          </div>
 
-                <div className="cart-form-group">
-                  <label htmlFor="cart-notes" className="cart-label">Special Notes / Spice Level (Optional)</label>
-                  <input
-                    type="text"
-                    id="cart-notes"
-                    name="notes"
-                    value={customerData.notes}
-                    onChange={handleInputChange}
-                    placeholder="e.g. Medium spicy, festive gift pack..."
-                    className="cart-input"
-                  />
+          {/* Drawer Footer (Summary & Checkout CTA) */}
+          {cart.length > 0 && (
+            <div className="cart-drawer-footer">
+              <div className="cart-summary-row">
+                <span className="summary-label">Delicacies Subtotal:</span>
+                <span className="summary-value">₹{subtotal}</span>
+              </div>
+
+              {/* Delivery Charges Notice */}
+              <div className="cart-delivery-notice">
+                <span className="delivery-notice-icon">🚚</span>
+                <span className="delivery-notice-text">
+                  Delivery charges are applicable based on location & order weight.
+                </span>
+              </div>
+
+              <div className="cart-total-row">
+                <span className="total-label">Estimated Subtotal:</span>
+                <div className="total-amount-wrap">
+                  <span className="total-amount">₹{subtotal}</span>
+                  <span className="total-extra-tag">+ Delivery</span>
                 </div>
-              </form>
-            </>
+              </div>
+
+              <button
+                type="submit"
+                form="cart-checkout-form"
+                className="cart-checkout-btn"
+              >
+                <span>Proceed to WhatsApp Order</span>
+                <span className="btn-icon">📲</span>
+              </button>
+
+              <a
+                href={`tel:${rawPhone || '918008944894'}`}
+                className="cart-call-order-link"
+              >
+                📞 Call Directly to Order: {phoneNumber}
+              </a>
+            </div>
           )}
         </div>
-
-        {/* Drawer Footer (Summary & Checkout CTA) */}
-        {cart.length > 0 && (
-          <div className="cart-drawer-footer">
-            <div className="cart-summary-row">
-              <span className="summary-label">Delicacies Subtotal:</span>
-              <span className="summary-value">₹{subtotal}</span>
-            </div>
-            <div className="cart-total-row">
-              <span className="total-label">Total Payable:</span>
-              <span className="total-amount">₹{subtotal}</span>
-            </div>
-
-            <button
-              type="submit"
-              form="cart-checkout-form"
-              className="cart-checkout-btn"
-            >
-              <span>Place Order via WhatsApp</span>
-              <span className="btn-icon">📲</span>
-            </button>
-
-            <a
-              href={`tel:${rawPhone || '918008944894'}`}
-              className="cart-call-order-link"
-            >
-              📞 Call Directly to Order: {phoneNumber}
-            </a>
-          </div>
-        )}
       </div>
-    </div>
+
+      {/* WhatsApp Order Confirmation Modal */}
+      {showConfirmModal && (
+        <div className="modal-backdrop" onClick={() => setShowConfirmModal(false)}>
+          <div className="confirmation-modal-card" onClick={(e) => e.stopPropagation()}>
+            <div className="confirm-modal-header">
+              <div className="confirm-ornament">❖</div>
+              <h3 className="confirm-modal-title">Confirm WhatsApp Order</h3>
+              <p className="confirm-modal-subtitle">
+                Please review your order details before redirecting to WhatsApp.
+              </p>
+            </div>
+
+            <div className="confirm-modal-body">
+              <div className="confirm-detail-row">
+                <span className="confirm-detail-label">👤 Customer:</span>
+                <strong className="confirm-detail-val">{customerData.name} ({customerData.phone})</strong>
+              </div>
+              <div className="confirm-detail-row">
+                <span className="confirm-detail-label">📍 Delivery To:</span>
+                <strong className="confirm-detail-val">{customerData.address}</strong>
+              </div>
+              <div className="confirm-detail-row">
+                <span className="confirm-detail-label">📦 Total Items:</span>
+                <strong className="confirm-detail-val">{totalItems} ({orderType === 'bulk' ? 'Bulk Order' : 'Normal Order'})</strong>
+              </div>
+              <div className="confirm-detail-row highlight-row">
+                <span className="confirm-detail-label">💰 Subtotal:</span>
+                <strong className="confirm-detail-val">₹{subtotal}</strong>
+              </div>
+              <div className="confirm-delivery-alert">
+                <span className="alert-icon">🚚</span>
+                <span><strong>Note:</strong> Delivery charges are applicable based on delivery distance.</span>
+              </div>
+            </div>
+
+            <div className="confirm-modal-actions">
+              <button
+                type="button"
+                className="confirm-cancel-btn"
+                onClick={() => setShowConfirmModal(false)}
+              >
+                Edit Details
+              </button>
+              <button
+                type="button"
+                className="confirm-proceed-btn"
+                onClick={confirmAndSendWhatsApp}
+              >
+                <span>Confirm & Send on WhatsApp</span>
+                <span className="confirm-btn-icon">💬</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
