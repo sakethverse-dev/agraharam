@@ -30,14 +30,14 @@ function Footer({ scrollToSection, phoneNumber = "+91 80089 44894" }) {
           </div>
 
           <div className="footer-col">
-            <h4 className="footer-col-title">Our Delicacies</h4>
+            <h4 className="footer-col-title">Our Offerings</h4>
             <ul className="footer-links-list">
-              <li>Sun-Dried Appadalu</li>
-              <li>Crispy Andhra Chekkalu</li>
-              <li>Artisanal Golden Murukulu</li>
-              <li>Spicy Masala Kara Boondi</li>
-              <li>Pure Desi Cow Ghee Laddus</li>
-              <li>Authentic Andhra Avakaya</li>
+              <li>Papadalu & Vadiyalu</li>
+              <li>Traditional Andhra Pickles</li>
+              <li>Farm-Fresh Ragi & Millet Pindilu</li>
+              <li>Aromatic Karivepaku Podi</li>
+              <li>Pure Moringa Powder</li>
+              <li>Organic Nuvvulu & Provisions</li>
             </ul>
           </div>
 
