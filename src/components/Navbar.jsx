@@ -1,7 +1,7 @@
 import React from 'react';
 import logoImg from '../assets/logo.jpg';
 
-function Navbar({ activeTab, scrollToSection, isScrolled }) {
+function Navbar({ activeTab, scrollToSection, isScrolled, totalCartItems = 0, openCart }) {
   const isOnHero = activeTab === 'Home';
 
   return (
@@ -22,6 +22,13 @@ function Navbar({ activeTab, scrollToSection, isScrolled }) {
             onClick={() => scrollToSection('about', 'About')}
           >
             About
+          </button>
+          <button
+            type="button"
+            className={`nav-link ${activeTab === 'Menu' ? 'active' : ''}`}
+            onClick={() => scrollToSection('menu', 'Menu')}
+          >
+            Menu
           </button>
         </div>
 
@@ -44,14 +51,14 @@ function Navbar({ activeTab, scrollToSection, isScrolled }) {
           </div>
         </a>
 
-        {/* Right Navigation Links */}
+        {/* Right Navigation Links & Cart Button */}
         <div className="nav-group">
           <button
             type="button"
-            className={`nav-link ${activeTab === 'Menu' ? 'active' : ''}`}
-            onClick={() => scrollToSection('menu', 'Menu')}
+            className={`nav-link ${activeTab === 'Order' ? 'active' : ''}`}
+            onClick={() => scrollToSection('order', 'Order')}
           >
-            Menu
+            Order Online
           </button>
           <button
             type="button"
@@ -60,6 +67,19 @@ function Navbar({ activeTab, scrollToSection, isScrolled }) {
           >
             Contact
           </button>
+          {openCart && (
+            <button
+              type="button"
+              className="nav-cart-btn"
+              onClick={openCart}
+              aria-label="Open Cart"
+            >
+              <span className="nav-cart-icon">🛒</span>
+              {totalCartItems > 0 && (
+                <span className="nav-cart-badge">{totalCartItems}</span>
+              )}
+            </button>
+          )}
         </div>
       </nav>
     </header>

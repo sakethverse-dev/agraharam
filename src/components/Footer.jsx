@@ -25,6 +25,7 @@ function Footer({ scrollToSection, phoneNumber = "+91 80089 44894" }) {
               <li><button type="button" onClick={() => scrollToSection('home', 'Home')}>Home</button></li>
               <li><button type="button" onClick={() => scrollToSection('about', 'About')}>About Story</button></li>
               <li><button type="button" onClick={() => scrollToSection('menu', 'Menu')}>Our Delicacies</button></li>
+              <li><button type="button" onClick={() => scrollToSection('order', 'Order')}>Order Online</button></li>
               <li><button type="button" onClick={() => scrollToSection('contact', 'Contact')}>Normal & Bulk Orders</button></li>
             </ul>
           </div>
