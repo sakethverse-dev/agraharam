@@ -19,9 +19,6 @@ function About() {
           <p>
             <strong>AGRAHARAM</strong> is born from a deep love for authentic, healthy, and homemade food. We bring the timeless flavors of traditional kitchens back to your home — from crisp, golden pindi vantalu and pure ghee sweets to handcrafted, sun-cured pickles and wholesome traditional snacks.
           </p>
-          <p>
-            Every batch is prepared with devotion, pure desi cow ghee, wood-pressed oils, and strictly zero chemical preservatives. This is not just a business; it is a promise of uncompromising quality, taste, and trust.
-          </p>
         </div>
 
         {/* Founder's Personal Message */}
