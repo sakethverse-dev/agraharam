@@ -116,7 +116,7 @@ function App() {
         >
           <div className="floating-cart-left">
             <span className="floating-cart-badge">{totalCartItems}</span>
-            <span className="floating-cart-icon">🛒</span>
+            <span className="floating-cart-icon">❖</span>
             <span className="floating-cart-text">View Cart</span>
           </div>
           <span className="floating-cart-total">₹{cartSubtotal} →</span>

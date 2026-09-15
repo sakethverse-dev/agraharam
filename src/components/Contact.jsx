@@ -59,7 +59,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
     const cleanMessage = sanitizeInput(formData.message);
 
     const text =
-      `🌿 *GENERAL INQUIRY - AGRAHARAM* 🌿\n\n` +
+      `*GENERAL INQUIRY - AGRAHARAM*\n\n` +
       `*Name:* ${cleanName || 'Not specified'}\n` +
       `*Topic:* ${cleanSubject}\n` +
       `*Message:* ${cleanMessage || 'Hello, I have an inquiry regarding AGRAHARAM.'}\n\n` +
@@ -112,7 +112,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
                   fontSize: '0.88rem',
                   marginBottom: '16px'
                 }}>
-                  ⚠️ {formError}
+                  • {formError}
                 </div>
               )}
 
@@ -176,7 +176,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
 
               <button type="submit" className="form-submit-btn" disabled={isSubmitting}>
                 <span>{isSubmitting ? 'Opening WhatsApp...' : 'Send Message via WhatsApp'}</span>
-                <span className="submit-btn-icon">💬</span>
+                <span className="submit-btn-icon">→</span>
               </button>
             </form>
           </div>
@@ -197,15 +197,15 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
 
             <div className="confirm-modal-body">
               <div className="confirm-detail-row">
-                <span className="confirm-detail-label">👤 From:</span>
+                <span className="confirm-detail-label">From:</span>
                 <strong className="confirm-detail-val">{formData.name}</strong>
               </div>
               <div className="confirm-detail-row">
-                <span className="confirm-detail-label">📋 Topic:</span>
+                <span className="confirm-detail-label">Topic:</span>
                 <strong className="confirm-detail-val">{formData.subject}</strong>
               </div>
               <div className="confirm-detail-row">
-                <span className="confirm-detail-label">💬 Message:</span>
+                <span className="confirm-detail-label">Message:</span>
                 <p className="confirm-detail-text">"{formData.message}"</p>
               </div>
             </div>
@@ -224,7 +224,7 @@ function Contact({ phoneNumber = "+91 80089 44894" }) {
                 onClick={confirmAndSendInquiry}
               >
                 <span>Confirm & Send on WhatsApp</span>
-                <span className="confirm-btn-icon">💬</span>
+                <span className="confirm-btn-icon">→</span>
               </button>
             </div>
           </div>

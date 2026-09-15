@@ -176,7 +176,7 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
         {/* Products Grid or Empty State */}
         {filteredProducts.length === 0 ? (
           <div className="order-empty-search-state">
-            <div className="empty-search-icon">🔍</div>
+            <div className="empty-search-icon">❖</div>
             <h3 className="empty-search-title">No Delicacies Found</h3>
             <p className="empty-search-text">
               We couldn't find any items matching "<strong>{searchQuery}</strong>"{activeCategory !== 'all' ? ` in this category` : ''}.
@@ -276,7 +276,7 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
                         ) : (
                           <>
                             <span>Add to Cart</span>
-                            <span className="btn-icon">🛒</span>
+                            <span className="btn-icon">+</span>
                           </>
                         )}
                       </button>
@@ -292,7 +292,7 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
         {/* Bottom Banner to Contact / Bulk Inquiries */}
         <div className="order-bottom-assistance-card">
           <div className="assistance-info">
-            <div className="assistance-icon">📦</div>
+            <div className="assistance-icon">❖</div>
             <div>
               <h4 className="assistance-title">Looking for Bulk / Event Catering or Custom Hampers?</h4>
               <p className="assistance-desc">
@@ -308,7 +308,7 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
             rel="noopener noreferrer"
             className="assistance-cta-btn"
           >
-            Inquire for Bulk Orders 📲
+            Inquire for Bulk Orders →
           </a>
         </div>
       </div>

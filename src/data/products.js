@@ -30,10 +30,10 @@ export const TAGLINES = [
 
 export const ORDER_CATEGORIES = [
   { id: 'all', label: 'All Items' },
-  { id: 'papadalu', label: '🥣 Papadalu & Vadiyalu' },
-  { id: 'pickles', label: '🌶️ Traditional Pickles' },
-  { id: 'pindilu', label: '🌾 Pindilu & Powders' },
-  { id: 'provisions', label: '🌱 Other Items & Provisions' }
+  { id: 'papadalu', label: 'Papadalu & Vadiyalu' },
+  { id: 'pickles', label: 'Traditional Pickles' },
+  { id: 'pindilu', label: 'Pindilu & Powders' },
+  { id: 'provisions', label: 'Other Items & Provisions' }
 ];
 
 export const PRODUCTS_SHOWCASE = [

@@ -104,16 +104,16 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
       .join('\n');
 
     const message =
-      `🌿 *NEW ORDER FROM WEBSITE - AGRAHARAM* 🌿\n\n` +
+      `*NEW ORDER FROM WEBSITE - AGRAHARAM*\n\n` +
       `*Order Type:* ${typeLabel}\n` +
       `*Customer Name:* ${cleanName}\n` +
       `*Phone Number:* ${cleanPhone}\n` +
       `*Delivery Location / City:* ${cleanAddress}\n` +
       (orderType === 'bulk' && cleanDate ? `*Required Date / Event:* ${cleanDate}\n` : '') +
       (cleanNotes ? `*Special Notes:* ${cleanNotes}\n` : '') +
-      `\n🛒 *ORDERED DELICACIES:*\n${itemsList}\n\n` +
-      `💰 *SUBTOTAL AMOUNT:* ₹${subtotal}\n` +
-      `🚚 *DELIVERY CHARGES:* Applicable based on location\n\n` +
+      `\n*ORDERED DELICACIES:*\n${itemsList}\n\n` +
+      `*SUBTOTAL AMOUNT:* ₹${subtotal}\n` +
+      `*DELIVERY CHARGES:* Applicable based on location\n\n` +
       `_Sent via AGRAHARAM Online Store_`;
 
     const url = `https://wa.me/${rawPhone || '918008944894'}?text=${encodeURIComponent(message)}`;
@@ -135,7 +135,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
           {/* Drawer Header */}
           <div className="cart-drawer-header">
             <div className="cart-header-left">
-              <span className="cart-header-icon">🛍️</span>
+              <span className="cart-header-icon">❖</span>
               <div>
                 <h3 className="cart-header-title">Your Order Cart</h3>
                 <span className="cart-header-count">{totalItems} {totalItems === 1 ? 'item' : 'items'} selected</span>
@@ -150,7 +150,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
           <div className="cart-drawer-body">
             {cart.length === 0 ? (
               <div className="cart-empty-state">
-                <div className="empty-cart-icon">🛒</div>
+                <div className="empty-cart-icon">❖</div>
                 <h4 className="empty-cart-title">Your cart is currently empty</h4>
                 <p className="empty-cart-desc">
                   Explore our authentic traditional homemade snacks, sweets, and pickles to start your order.
@@ -210,7 +210,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                         title="Remove item"
                         aria-label="Remove item"
                       >
-                        🗑
+                        ✕
                       </button>
                     </div>
                   ))}
@@ -223,14 +223,14 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                     className={`order-type-tab ${orderType === 'normal' ? 'active' : ''}`}
                     onClick={() => setOrderType('normal')}
                   >
-                    <span>🏠 Normal Order</span>
+                    <span>Normal Order</span>
                   </button>
                   <button
                     type="button"
                     className={`order-type-tab ${orderType === 'bulk' ? 'active' : ''}`}
                     onClick={() => setOrderType('bulk')}
                   >
-                    <span>🎉 Bulk / Event Order</span>
+                    <span>Bulk / Event Order</span>
                   </button>
                 </div>
 
@@ -248,7 +248,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                       fontSize: '0.88rem',
                       marginBottom: '16px'
                     }}>
-                      ⚠️ {formError}
+                      • {formError}
                     </div>
                   )}
 
@@ -351,7 +351,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
 
               {/* Delivery Charges Notice */}
               <div className="cart-delivery-notice">
-                <span className="delivery-notice-icon">🚚</span>
+                <span className="delivery-notice-icon">❖</span>
                 <span className="delivery-notice-text">
                   Delivery charges are applicable based on location & order weight.
                 </span>
@@ -371,14 +371,14 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                 className="cart-checkout-btn"
               >
                 <span>Proceed to WhatsApp Order</span>
-                <span className="btn-icon">📲</span>
+                <span className="btn-icon">→</span>
               </button>
 
               <a
                 href={`tel:${rawPhone || '918008944894'}`}
                 className="cart-call-order-link"
               >
-                📞 Call Directly to Order: {phoneNumber}
+                Call Directly to Order: {phoneNumber}
               </a>
             </div>
           )}
@@ -399,23 +399,23 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
 
             <div className="confirm-modal-body">
               <div className="confirm-detail-row">
-                <span className="confirm-detail-label">👤 Customer:</span>
+                <span className="confirm-detail-label">Customer:</span>
                 <strong className="confirm-detail-val">{customerData.name} ({customerData.phone})</strong>
               </div>
               <div className="confirm-detail-row">
-                <span className="confirm-detail-label">📍 Delivery To:</span>
+                <span className="confirm-detail-label">Delivery To:</span>
                 <strong className="confirm-detail-val">{customerData.address}</strong>
               </div>
               <div className="confirm-detail-row">
-                <span className="confirm-detail-label">📦 Total Items:</span>
+                <span className="confirm-detail-label">Total Items:</span>
                 <strong className="confirm-detail-val">{totalItems} ({orderType === 'bulk' ? 'Bulk Order' : 'Normal Order'})</strong>
               </div>
               <div className="confirm-detail-row highlight-row">
-                <span className="confirm-detail-label">💰 Subtotal:</span>
+                <span className="confirm-detail-label">Subtotal:</span>
                 <strong className="confirm-detail-val">₹{subtotal}</strong>
               </div>
               <div className="confirm-delivery-alert">
-                <span className="alert-icon">🚚</span>
+                <span className="alert-icon">❖</span>
                 <span><strong>Note:</strong> Delivery charges are applicable based on delivery distance.</span>
               </div>
             </div>
@@ -434,7 +434,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                 onClick={confirmAndSendWhatsApp}
               >
                 <span>Confirm & Send on WhatsApp</span>
-                <span className="confirm-btn-icon">💬</span>
+                <span className="confirm-btn-icon">→</span>
               </button>
             </div>
           </div>

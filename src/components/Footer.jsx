@@ -47,7 +47,7 @@ function Footer({ scrollToSection, phoneNumber = "+91 80089 44894" }) {
               Direct hotline & WhatsApp for all normal household orders and bulk festive catering:
             </p>
             <a href={`tel:${rawPhone || '918008944894'}`} className="footer-phone-link">
-              📞 {phoneNumber}
+              Call / WhatsApp: {phoneNumber}
             </a>
             <a
               href={`https://wa.me/${rawPhone || '918008944894'}`}
@@ -55,7 +55,7 @@ function Footer({ scrollToSection, phoneNumber = "+91 80089 44894" }) {
               rel="noopener noreferrer"
               className="footer-wa-link"
             >
-              💬 Contact on WhatsApp
+              Contact on WhatsApp →
             </a>
           </div>
         </div>
