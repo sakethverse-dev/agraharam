@@ -21,7 +21,6 @@ import karivepakuPodiImg from '../assets/products/karivepaku_podi.jpg';
 import moringaPowderImg from '../assets/products/moringa_powder.jpg';
 import nuvvuluImg from '../assets/products/nuvvulu.jpg';
 import soapnutImg from '../assets/products/soapnut.jpg';
-import gummadikayaImg from '../assets/products/gummadikaya.jpg';
 
 export const TAGLINES = [
   "సాంప్రదాయం • రుచి • అనుబంధం",
@@ -350,22 +349,6 @@ export const PRODUCTS_SHOWCASE = [
   // ==========================================
   // 🌱 OTHER ITEMS & PROVISIONS
   // ==========================================
-  {
-    id: 'gummadikaya',
-    name: 'Gummadikaya (Ash Gourd)',
-    telugu: 'స్వచ్ఛమైన గుమ్మడికాయ (Ash Gourd)',
-    category: 'provisions',
-    img: gummadikayaImg,
-    leftCallout: 'Pure Natural Farm Produce',
-    rightCallout: 'Cooling & Digestive Wellness',
-    desc: 'Farm-fresh, organically cultivated Ash Gourd (Gummadikaya). Prized for festive culinary preparation, natural wellness juices, and vadiyalu crafting.',
-    highlight: 'Organic Farm Fresh • Natural Produce',
-    variants: [
-      { size: '250g', price: 200 },
-      { size: '500g', price: 400 },
-      { size: '1 kg', price: 800 }
-    ]
-  },
   {
     id: 'nuvvulu',
     name: 'Nuvvulu (Desi Sesame Seeds)',
