@@ -20,6 +20,8 @@ import kankulaGadkaPowderImg from '../assets/products/kankula_gadka_powder.jpg';
 import karivepakuPodiImg from '../assets/products/karivepaku_podi.jpg';
 import moringaPowderImg from '../assets/products/moringa_powder.jpg';
 import nuvvuluImg from '../assets/products/nuvvulu.jpg';
+import soapnutImg from '../assets/products/soapnut.jpg';
+import gummadikayaImg from '../assets/products/gummadikaya.jpg';
 
 export const TAGLINES = [
   "సాంప్రదాయం • రుచి • అనుబంధం",
@@ -353,7 +355,7 @@ export const PRODUCTS_SHOWCASE = [
     name: 'Gummadikaya (Ash Gourd)',
     telugu: 'స్వచ్ఛమైన గుమ్మడికాయ (Ash Gourd)',
     category: 'provisions',
-    img: gummadikayaVadiyaluImg,
+    img: gummadikayaImg,
     leftCallout: 'Pure Natural Farm Produce',
     rightCallout: 'Cooling & Digestive Wellness',
     desc: 'Farm-fresh, organically cultivated Ash Gourd (Gummadikaya). Prized for festive culinary preparation, natural wellness juices, and vadiyalu crafting.',
@@ -385,7 +387,7 @@ export const PRODUCTS_SHOWCASE = [
     name: 'Black Soapnut (Kunkudukayalu)',
     telugu: 'నల్ల కుంకుడుకాయలు (Natural Soapnuts)',
     category: 'provisions',
-    img: challaMirapakayaImg,
+    img: soapnutImg,
     leftCallout: '100% Natural Herbal Cleanser',
     rightCallout: 'Traditional Hair & Fabric Wash',
     desc: 'Wild-harvested, premium quality black soapnuts (Kunkudukayalu / Reetha). The timeless South Indian natural alternative for chemical-free hair care and gentle cleaning.',
