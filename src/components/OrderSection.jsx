@@ -198,89 +198,98 @@ function OrderSection({ phoneNumber = "+91 80089 44894", cart, setCart, isCartOp
             const selection = productSelections[product.id] || { sizeIndex: 0, qty: 1 };
             const currentVariant = product.variants[selection.sizeIndex];
             const isAdded = addedAnimation[product.id];
+            const lowestPrice = product.variants[0]?.price;
 
             return (
               <div key={product.id} className="order-product-card">
-                {/* Product Thumbnail */}
+                {/* Product Thumbnail with Quick Add button */}
                 <div className="product-card-media">
-                  <img src={product.img} alt={product.name} className="product-card-img" />
+                  <img src={product.img} alt={product.name} className="product-card-img" loading="lazy" />
+                  <button
+                    type="button"
+                    className="quick-add-btn"
+                    onClick={() => handleAddToCart(product)}
+                    title={`Quick add ${product.name} to cart`}
+                    aria-label={`Quick add ${product.name} to cart`}
+                  >
+                    {isAdded ? '✓' : '+'}
+                  </button>
                 </div>
 
                 {/* Content */}
                 <div className="product-card-body">
-                  <span className="product-telugu-badge">{product.telugu}</span>
-                  <h3 className="product-card-name">{product.name}</h3>
-
-                  {/* Pack Size Selector */}
-                  <div className="pack-size-selector-wrap">
-                    <span className="selector-label">Select Pack Size:</span>
-                    <div className="pack-size-pills">
-                      {product.variants.map((variant, vIdx) => (
-                        <button
-                          type="button"
-                          key={variant.size}
-                          className={`pack-pill ${selection.sizeIndex === vIdx ? 'active' : ''}`}
-                          onClick={() => handleSizeChange(product.id, vIdx)}
-                        >
-                          <span className="pill-size">{variant.size}</span>
-                          <span className="pill-price">₹{variant.price}</span>
-                        </button>
-                      ))}
-                    </div>
+                  <div className="product-card-info-top">
+                    <span className="product-telugu-badge">{product.telugu}</span>
+                    <h3 className="product-card-name" title={product.name}>{product.name}</h3>
                   </div>
 
-                  {/* Price & Quantity & Add to Cart Row */}
-                  <div className="product-card-footer">
-                    <div className="price-display-block">
-                      <span className="price-amount">₹{currentVariant.price * selection.qty}</span>
-                      <span className="price-subtext">
-                        ({selection.qty} × {currentVariant.size} @ ₹{currentVariant.price})
-                      </span>
-                    </div>
+                  {/* Price Line */}
+                  <div className="product-price-line">
+                    <span className="from-prefix">from</span>
+                    <span className="product-price-val">₹{lowestPrice}</span>
+                    {selection.sizeIndex > 0 && (
+                      <span className="selected-size-price">({currentVariant.size}: ₹{currentVariant.price})</span>
+                    )}
+                  </div>
 
-                    <div className="action-row">
-                      {/* Stepper */}
-                      <div className="qty-stepper">
-                        <button
-                          type="button"
-                          className="qty-btn"
-                          onClick={() => handleQtyChange(product.id, -1)}
-                          disabled={selection.qty <= 1}
-                          aria-label="Decrease quantity"
-                        >
-                          −
-                        </button>
-                        <span className="qty-value">{selection.qty}</span>
-                        <button
-                          type="button"
-                          className="qty-btn"
-                          onClick={() => handleQtyChange(product.id, 1)}
-                          disabled={selection.qty >= 20}
-                          aria-label="Increase quantity"
-                        >
-                          +
-                        </button>
-                      </div>
+                  {/* Pack Size Selector Dropdown */}
+                  <div className="pack-select-container">
+                    <select
+                      value={selection.sizeIndex}
+                      onChange={(e) => handleSizeChange(product.id, Number(e.target.value))}
+                      className="pack-select-dropdown"
+                      aria-label={`Select pack size for ${product.name}`}
+                    >
+                      {product.variants.map((variant, vIdx) => (
+                        <option key={variant.size} value={vIdx}>
+                          {variant.size} – ₹{variant.price}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                      {/* Add to Cart Button */}
+                  {/* Stepper & Add to Cart Action Row */}
+                  <div className="product-card-actions">
+                    <div className="qty-stepper">
                       <button
                         type="button"
-                        className={`add-cart-btn ${isAdded ? 'added' : ''}`}
-                        onClick={() => handleAddToCart(product)}
+                        className="qty-btn"
+                        onClick={() => handleQtyChange(product.id, -1)}
+                        disabled={selection.qty <= 1}
+                        aria-label="Decrease quantity"
                       >
-                        {isAdded ? (
-                          <>
-                            <span>Added!</span>
-                            <span className="btn-icon">✓</span>
-                          </>
-                        ) : (
-                          <>
-                            <span>Add to Cart</span>
-                            <span className="btn-icon">+</span>
-                          </>
-                        )}
+                        −
+                      </button>
+                      <span className="qty-value">{selection.qty}</span>
+                      <button
+                        type="button"
+                        className="qty-btn"
+                        onClick={() => handleQtyChange(product.id, 1)}
+                        disabled={selection.qty >= 20}
+                        aria-label="Increase quantity"
+                      >
+                        +
                       </button>
                     </div>
+
+                    <button
+                      type="button"
+                      className={`add-cart-btn ${isAdded ? 'added' : ''}`}
+                      onClick={() => handleAddToCart(product)}
+                      aria-label={`Add ${product.name} to cart`}
+                    >
+                      {isAdded ? (
+                        <>
+                          <span>Added!</span>
+                          <span className="btn-icon">✓</span>
+                        </>
+                      ) : (
+                        <>
+                          <span>Add</span>
+                          <span className="btn-icon">+</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
               </div>
