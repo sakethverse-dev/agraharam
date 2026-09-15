@@ -6,4 +6,4 @@ Allow: /
 Disallow: /api/
 Disallow: /*.json$
 
-Sitemap: https://agraharam.vercel.app/sitemap.xml
+Sitemap: https://agraharam.store/sitemap.xml
