@@ -2102,13 +2102,15 @@ body {
 }
 
 .product-price-val {
-  font-family: var(--font-serif);
-  font-size: 1.15rem;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 1.18rem;
   font-weight: 800;
   color: #24060C;
+  letter-spacing: -0.01em;
 }
 
 .selected-size-price {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   font-size: 0.72rem;
   color: #9E6819;
   font-weight: 600;
@@ -2781,7 +2783,7 @@ body {
 }
 
 .total-amount {
-  font-family: var(--font-serif);
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   font-size: 1.45rem;
   font-weight: 700;
   color: #24060C;
