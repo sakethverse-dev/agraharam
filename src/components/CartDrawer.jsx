@@ -13,6 +13,9 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
 
   const [formError, setFormError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLocating, setIsLocating] = useState(false);
+  const [locationFeedback, setLocationFeedback] = useState({ type: '', message: '' });
+  const [gpsCoords, setGpsCoords] = useState(null); // { lat, lon, mapsUrl }
 
   const rawPhone = phoneNumber.replace(/[^0-9]/g, '');
 
@@ -49,6 +52,135 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
       [name]: value
     }));
     if (formError) setFormError('');
+    if (name === 'address' && locationFeedback.type === 'error') {
+      setLocationFeedback({ type: '', message: '' });
+    }
+  };
+
+  // Auto-detect GPS Location and reverse geocode
+  const handleAutoDetectLocation = async () => {
+    if (isLocating) return;
+    setLocationFeedback({ type: '', message: '' });
+
+    if (!navigator.geolocation) {
+      setLocationFeedback({
+        type: 'error',
+        message: 'Geolocation is not supported by your browser.'
+      });
+      return;
+    }
+
+    setIsLocating(true);
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const { latitude, longitude } = position.coords;
+        const mapsUrl = `https://maps.google.com/?q=${latitude},${longitude}`;
+        setGpsCoords({ lat: latitude, lon: longitude, mapsUrl });
+
+        try {
+          let formattedAddress = '';
+
+          // 1. Try BigDataCloud reverse geocoding API (Fast, CORS friendly, detailed Indian admin divisions)
+          try {
+            const res = await fetch(
+              `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`
+            );
+            if (res.ok) {
+              const data = await res.json();
+              const parts = [];
+              if (data.locality) parts.push(data.locality);
+              if (data.city && data.city !== data.locality) parts.push(data.city);
+              if (data.principalSubdivision) parts.push(data.principalSubdivision);
+              if (data.postcode) parts.push(data.postcode);
+
+              if (parts.length > 0) {
+                formattedAddress = parts.join(', ');
+              }
+            }
+          } catch (err) {
+            console.warn('BigDataCloud geocode failed, falling back to Nominatim:', err);
+          }
+
+          // 2. Fallback to OpenStreetMap Nominatim
+          if (!formattedAddress) {
+            try {
+              const res = await fetch(
+                `https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}&zoom=18&addressdetails=1`
+              );
+              if (res.ok) {
+                const data = await res.json();
+                if (data && data.address) {
+                  const addr = data.address;
+                  const road = addr.road || addr.suburb || addr.neighbourhood || '';
+                  const city = addr.city || addr.town || addr.village || addr.county || '';
+                  const state = addr.state || '';
+                  const postcode = addr.postcode || '';
+
+                  const parts = [road, city, state, postcode].filter(Boolean);
+                  if (parts.length > 0) {
+                    formattedAddress = parts.join(', ');
+                  } else if (data.display_name) {
+                    formattedAddress = data.display_name.split(',').slice(0, 4).join(',').trim();
+                  }
+                }
+              }
+            } catch (err) {
+              console.warn('Nominatim geocode fallback failed:', err);
+            }
+          }
+
+          if (formattedAddress) {
+            setCustomerData((prev) => ({
+              ...prev,
+              address: formattedAddress
+            }));
+            setLocationFeedback({
+              type: 'success',
+              message: 'Location auto-filled! You can add Flat / Door No. if needed.'
+            });
+          } else {
+            const coordsStr = `GPS Pin (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`;
+            setCustomerData((prev) => ({
+              ...prev,
+              address: prev.address ? `${prev.address} [${coordsStr}]` : coordsStr
+            }));
+            setLocationFeedback({
+              type: 'success',
+              message: 'GPS coordinates detected! Please verify your area / city.'
+            });
+          }
+        } catch (err) {
+          console.error('Error in reverse geocode process:', err);
+          setLocationFeedback({
+            type: 'error',
+            message: 'Unable to resolve address name. Please enter manually.'
+          });
+        } finally {
+          setIsLocating(false);
+        }
+      },
+      (error) => {
+        setIsLocating(false);
+        let errorMsg = 'Could not fetch your location.';
+        if (error.code === error.PERMISSION_DENIED) {
+          errorMsg = 'Location access was denied in your browser. Please type your area manually.';
+        } else if (error.code === error.POSITION_UNAVAILABLE) {
+          errorMsg = 'Location position unavailable. Please type manually.';
+        } else if (error.code === error.TIMEOUT) {
+          errorMsg = 'Location request timed out. Please try again or type manually.';
+        }
+        setLocationFeedback({
+          type: 'error',
+          message: errorMsg
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 60000
+      }
+    );
   };
 
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -109,6 +241,7 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
       `*Customer Name:* ${cleanName}\n` +
       `*Phone Number:* ${cleanPhone}\n` +
       `*Delivery Location / City:* ${cleanAddress}\n` +
+      (gpsCoords?.mapsUrl ? `*Google Maps Pin:* ${gpsCoords.mapsUrl}\n` : '') +
       (orderType === 'bulk' && cleanDate ? `*Required Date / Event:* ${cleanDate}\n` : '') +
       (cleanNotes ? `*Special Notes:* ${cleanNotes}\n` : '') +
       `\n*ORDERED DELICACIES:*\n${itemsList}\n\n` +
@@ -295,7 +428,36 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                   </div>
 
                   <div className="cart-form-group">
-                    <label htmlFor="cart-address" className="cart-label">Delivery City / Area *</label>
+                    <div className="cart-label-row">
+                      <label htmlFor="cart-address" className="cart-label">Delivery City / Area *</label>
+                      <button
+                        type="button"
+                        className={`auto-loc-btn ${isLocating ? 'loading' : ''} ${locationFeedback.type === 'success' ? 'success' : ''}`}
+                        onClick={handleAutoDetectLocation}
+                        disabled={isLocating}
+                        title="Auto-fill your current delivery location using GPS"
+                      >
+                        {isLocating ? (
+                          <>
+                            <span className="loc-spinner"></span>
+                            <span>Detecting...</span>
+                          </>
+                        ) : locationFeedback.type === 'success' ? (
+                          <>
+                            <span className="loc-icon">✓</span>
+                            <span>Location Filled</span>
+                          </>
+                        ) : (
+                          <>
+                            <svg className="loc-svg-icon" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                              <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                            <span>Auto-Fill Location</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                     <input
                       type="text"
                       id="cart-address"
@@ -303,10 +465,16 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
                       maxLength={250}
                       value={customerData.address}
                       onChange={handleInputChange}
-                      placeholder="e.g. Jubilee Hills, Hyderabad"
+                      placeholder="e.g. Jubilee Hills, Hyderabad (or click Auto-Fill)"
                       className="cart-input"
                       required
                     />
+                    {locationFeedback.message && (
+                      <div className={`loc-feedback-msg ${locationFeedback.type}`}>
+                        {locationFeedback.type === 'success' ? '✓ ' : '• '}
+                        {locationFeedback.message}
+                      </div>
+                    )}
                   </div>
 
                   {orderType === 'bulk' && (
@@ -404,7 +572,10 @@ function CartDrawer({ isOpen, onClose, cart, setCart, phoneNumber = "+91 80089 4
               </div>
               <div className="confirm-detail-row">
                 <span className="confirm-detail-label">Delivery To:</span>
-                <strong className="confirm-detail-val">{customerData.address}</strong>
+                <strong className="confirm-detail-val">
+                  {customerData.address}
+                  {gpsCoords?.mapsUrl && <span className="gps-tag"> (GPS Pin Attached)</span>}
+                </strong>
               </div>
               <div className="confirm-detail-row">
                 <span className="confirm-detail-label">Total Items:</span>
