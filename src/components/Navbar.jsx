@@ -18,10 +18,10 @@ function Navbar({ activeTab, scrollToSection, isScrolled }) {
           </button>
           <button
             type="button"
-            className={`nav-link ${activeTab === 'About' ? 'active' : ''}`}
-            onClick={() => scrollToSection('about', 'About')}
+            className={`nav-link ${activeTab === 'Menu' ? 'active' : ''}`}
+            onClick={() => scrollToSection('menu', 'Menu')}
           >
-            About
+            Menu
           </button>
         </div>
 
@@ -48,10 +48,10 @@ function Navbar({ activeTab, scrollToSection, isScrolled }) {
         <div className="nav-group">
           <button
             type="button"
-            className={`nav-link ${activeTab === 'Menu' ? 'active' : ''}`}
-            onClick={() => scrollToSection('menu', 'Menu')}
+            className={`nav-link ${activeTab === 'About' ? 'active' : ''}`}
+            onClick={() => scrollToSection('about', 'About')}
           >
-            Menu
+            About
           </button>
           <button
             type="button"

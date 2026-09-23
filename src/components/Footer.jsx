@@ -23,8 +23,8 @@ function Footer({ scrollToSection, phoneNumber = "+91 80089 44894" }) {
             <h4 className="footer-col-title">Quick Links</h4>
             <ul className="footer-links-list">
               <li><button type="button" onClick={() => scrollToSection('home', 'Home')}>Home</button></li>
-              <li><button type="button" onClick={() => scrollToSection('about', 'About')}>About Story</button></li>
               <li><button type="button" onClick={() => scrollToSection('menu', 'Menu')}>Our Delicacies & Menu</button></li>
+              <li><button type="button" onClick={() => scrollToSection('about', 'About')}>About Story</button></li>
               <li><button type="button" onClick={() => scrollToSection('contact', 'Contact')}>Contact & Inquiries</button></li>
             </ul>
           </div>

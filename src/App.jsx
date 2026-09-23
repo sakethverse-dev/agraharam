@@ -36,8 +36,8 @@ function App() {
       // Detect active section
       const sections = [
         { id: 'home', name: 'Home' },
-        { id: 'about', name: 'About' },
         { id: 'menu', name: 'Menu' },
+        { id: 'about', name: 'About' },
         { id: 'contact', name: 'Contact' }
       ];
 
@@ -85,9 +85,6 @@ function App() {
       {/* Hero / Home Section Component */}
       <Home />
 
-      {/* About Section Component */}
-      <About />
-
       {/* Moving Menu Showcase Component */}
       <Menu />
 
@@ -99,6 +96,9 @@ function App() {
         isCartOpen={isCartOpen}
         setIsCartOpen={setIsCartOpen}
       />
+
+      {/* About Section Component */}
+      <About />
 
       {/* Contact Section Component (Normal & Bulk Orders) */}
       <Contact phoneNumber={phoneNumber} />
