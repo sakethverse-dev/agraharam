@@ -1561,23 +1561,54 @@ body {
 }
 
 .footer-wa-link {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
   color: #4ADE80;
   font-size: 0.95rem;
   text-decoration: none;
   font-weight: 500;
-  transition: color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .footer-wa-link:hover {
   color: #86EFAC;
+  transform: translateX(2px);
+}
+
+.footer-social-links-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.footer-insta-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: #F4C472;
+  font-size: 0.95rem;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.footer-insta-link:hover {
+  color: #F8EEDB;
+  transform: translateX(3px);
+}
+
+.footer-social-icon {
+  flex-shrink: 0;
+  stroke: currentColor;
 }
 
 /* Footer Bottom */
 .footer-bottom-bar {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   text-align: center;
   flex-wrap: wrap;
   gap: 16px;
@@ -1589,6 +1620,17 @@ body {
 
 .footer-founder-credit strong {
   color: #FAF4EB;
+}
+
+.footer-bottom-insta {
+  color: #BDB09F;
+  text-decoration: none;
+  font-size: 0.85rem;
+  transition: color 0.2s ease;
+}
+
+.footer-bottom-insta:hover {
+  color: #F4C472;
 }
 
 /* Responsive adjustments for Contact & Footer */
